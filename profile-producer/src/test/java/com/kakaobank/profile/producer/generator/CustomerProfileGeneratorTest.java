@@ -1,6 +1,5 @@
 package com.kakaobank.profile.producer.generator;
 
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.kakaobank.profile.producer.model.Customer;
 import org.junit.Assert;
 import org.junit.Before;

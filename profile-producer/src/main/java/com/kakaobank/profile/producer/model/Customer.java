@@ -2,9 +2,12 @@ package com.kakaobank.profile.producer.model;
 
 import com.kakaobank.profile.producer.util.StringUtil;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
-public class Customer {
+public class Customer implements Serializable {
+
+    private static final long serialVersionUID = 6734151598372111728L;
 
     private String id;
     private String name;
