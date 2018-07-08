@@ -11,6 +11,7 @@ import org.junit.Test;
 import java.security.NoSuchAlgorithmException;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.notNullValue;
 
 public class AccountLogGeneratorTest {
@@ -68,6 +69,22 @@ public class AccountLogGeneratorTest {
         //then
         Assert.assertThat(actual, is(notNullValue()));
         Assert.assertThat(actual.getEventType(), is(EventType.CREATE));
+        Assert.assertTrue(actual.getAmount() >= 0);
+        Assert.assertThat(actual.getCustomer(), is(givenCustomer));
+    }
+
+    @Test
+    public void givenCustomer_whenDoGenerate_thenReturnRandomEventLogExceptCreateAndJoinEventTest() throws NoSuchAlgorithmException {
+        //given
+        Customer givenCustomer = TestDataFactory.getCustomer();
+
+        //when
+        EventLog actual = generator.doGenerate(givenCustomer);
+
+        //then
+        Assert.assertThat(actual, is(notNullValue()));
+        Assert.assertThat(actual.getEventType(), not(EventType.JOIN));
+        Assert.assertThat(actual.getEventType(), not(EventType.CREATE));
         Assert.assertTrue(actual.getAmount() >= 0);
         Assert.assertThat(actual.getCustomer(), is(givenCustomer));
     }

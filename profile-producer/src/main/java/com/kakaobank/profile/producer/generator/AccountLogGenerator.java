@@ -14,11 +14,15 @@ public class AccountLogGenerator {
         this.MAX_BOUND_FOR_AMOUNT = maxBoundForAmount;
     }
 
+    public EventLog doGenerate(Customer customer) {
+        return doGenerate(customer, getRandomEventType());
+    }
+
     public EventLog doGenerate(Customer customer, EventType eventType) {
         if(customer == null)
             throw new IllegalArgumentException("Customer info is empty!!!!");
 
-        int amount = generateRandomAmount();
+        int amount = getRandomAmount();
         LocalDateTime eventTime = LocalDateTime.now();
 
         return createEventLog(customer, eventType, eventTime, amount);
@@ -38,7 +42,12 @@ public class AccountLogGenerator {
         return eventLog;
     }
 
-    private int generateRandomAmount() {
+    private int getRandomAmount() {
         return ThreadLocalRandom.current().nextInt(MAX_BOUND_FOR_AMOUNT);
     }
+
+    private EventType getRandomEventType() {
+        return EventType.getRandom();
+    }
+
 }
