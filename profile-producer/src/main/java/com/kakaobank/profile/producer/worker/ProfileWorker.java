@@ -8,6 +8,8 @@ import com.kakaobank.profile.producer.service.WriteProfileService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.Callable;
 
 public class ProfileWorker implements Callable<Integer> {
@@ -38,17 +40,14 @@ public class ProfileWorker implements Callable<Integer> {
     }
 
     private Integer doProcess() {
-        int logCount = 0;
-        EventLog joinEventLog = accountLogGenerator.doGenerateJoinEvent(customer);
-        EventLog createAccountEventLog = accountLogGenerator.doGenerate(customer, EventType.CREATE);
-        sendJoinAndCreateAccountEventLogs(joinEventLog, createAccountEventLog);
-
+        int logCount = sendJoinAndCreateAccountEventLogs(getJoinAndCreateAccountEventLog(), 0);
         return generateAndSendEventLogs(logCount);
     }
 
     private int generateAndSendEventLogs(int logCount) {
-        for (int i = 0; i < maxLogCount; i++) {
-            EventLog eventLog = accountLogGenerator.doGenerate(customer);
+        int initialSize = logCount;
+        for (int i = initialSize; i < maxLogCount + initialSize; i++) {
+            EventLog eventLog = getEventLog(i);
             boolean isSuccess = writeProfileService.write(eventLog);
 
             if(isSuccess)
@@ -59,8 +58,30 @@ public class ProfileWorker implements Callable<Integer> {
         return logCount;
     }
 
-    private void sendJoinAndCreateAccountEventLogs(EventLog joinEventLog, EventLog createAccountEventLog) {
-        writeProfileService.write(joinEventLog);
-        writeProfileService.write(createAccountEventLog);
+    private EventLog getEventLog(int i) {
+        EventLog eventLog = accountLogGenerator.doGenerate(customer);
+        eventLog.setSeq(i);
+        return eventLog;
+    }
+
+    private List<EventLog> getJoinAndCreateAccountEventLog() {
+        List<EventLog> logs = new ArrayList<>();
+        EventLog joinEventLog = accountLogGenerator.doGenerateJoinEvent(customer);
+        joinEventLog.setSeq(0l);
+        logs.add(joinEventLog);
+
+        EventLog createAccountEventLog = accountLogGenerator.doGenerate(customer, EventType.CREATE);
+        createAccountEventLog.setSeq(1l);
+        logs.add(createAccountEventLog);
+
+        return logs;
+    }
+
+    private int sendJoinAndCreateAccountEventLogs(List<EventLog> logs, int logCount) {
+        List<Boolean> results = writeProfileService.write(logs);
+        for (Boolean result : results)
+            if(result) logCount++;
+
+        return logCount;
     }
 }

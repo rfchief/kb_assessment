@@ -8,6 +8,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class WriteProfileService {
     private final Logger logger = LoggerFactory.getLogger(WriteProfileService.class);
@@ -36,6 +38,14 @@ public class WriteProfileService {
         }
 
         return false;
+    }
+
+    public List<Boolean> write(List<EventLog> logs) {
+        List<Boolean> results = new ArrayList<>();
+        for (EventLog log : logs)
+            results.add(write(log));
+
+        return results;
     }
 
     public void open() throws IOException {

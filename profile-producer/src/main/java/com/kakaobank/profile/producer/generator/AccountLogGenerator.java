@@ -22,7 +22,7 @@ public class AccountLogGenerator {
         if(customer == null)
             throw new IllegalArgumentException("Customer info is empty!!!!");
 
-        int amount = getRandomAmount();
+        int amount = eventType == EventType.JOIN ? 0 : getRandomAmount();
         LocalDateTime eventTime = LocalDateTime.now();
 
         return createEventLog(customer, eventType, eventTime, amount);
