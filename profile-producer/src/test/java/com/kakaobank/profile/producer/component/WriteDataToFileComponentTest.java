@@ -22,8 +22,9 @@ public class WriteDataToFileComponentTest {
 
     @Before
     public void setup() throws NoSuchAlgorithmException, IOException {
-        this.filePath = "report/test.txt";
+        this.filePath = "logs/test.txt";
         this.component = new WriteDataToFileComponent(filePath);
+        this.component.open();
         this.content = TestDataFactory.getCustomer().toString();
     }
 

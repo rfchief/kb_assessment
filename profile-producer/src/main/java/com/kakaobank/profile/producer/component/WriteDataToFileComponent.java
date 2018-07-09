@@ -12,6 +12,9 @@ public class WriteDataToFileComponent {
 
     public WriteDataToFileComponent(String filePath) throws IOException {
         this.filePath = filePath;
+    }
+
+    public void open() throws IOException {
         this.out = new BufferedWriter(getFileWriter(filePath));
     }
 
@@ -34,6 +37,7 @@ public class WriteDataToFileComponent {
         if(file.exists())
             return new FileWriter(file, true);
 
+        file.getParentFile().mkdir();
         file.createNewFile();
         return new FileWriter(file, false);
     }
