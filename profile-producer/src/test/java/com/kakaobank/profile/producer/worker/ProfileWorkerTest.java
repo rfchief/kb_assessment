@@ -3,6 +3,7 @@ package com.kakaobank.profile.producer.worker;
 import com.kakaobank.profile.producer.component.WriteDataToFileComponent;
 import com.kakaobank.profile.producer.generator.AccountLogGenerator;
 import com.kakaobank.profile.producer.model.Customer;
+import com.kakaobank.profile.producer.service.WriteProfileService;
 import com.kakaobank.profile.producer.util.TestDataFactory;
 import org.junit.Assert;
 import org.junit.Before;
@@ -24,8 +25,8 @@ public class ProfileWorkerTest {
         customer = TestDataFactory.getCustomer();
         maxLogCount = 100;
         AccountLogGenerator accountLogGenerator = TestDataFactory.getAccountLogGenerator();
-        WriteDataToFileComponent writeDataToFileComponent = TestDataFactory.getWriteDataToFileComponent();
-        this.worker = new ProfileWorker(customer, maxLogCount, accountLogGenerator, writeDataToFileComponent);
+        WriteProfileService writeProfileService = TestDataFactory.getWriteProfileService();
+        this.worker = new ProfileWorker(customer, maxLogCount, accountLogGenerator, writeProfileService);
     }
 
     @Test

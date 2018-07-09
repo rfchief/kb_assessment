@@ -4,6 +4,7 @@ import com.kakaobank.profile.producer.component.WriteDataToFileComponent;
 import com.kakaobank.profile.producer.generator.AccountLogGenerator;
 import com.kakaobank.profile.producer.generator.CustomerProfileGenerator;
 import com.kakaobank.profile.producer.model.Customer;
+import com.kakaobank.profile.producer.service.WriteProfileService;
 
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
@@ -34,5 +35,9 @@ public class TestDataFactory {
     public static WriteDataToFileComponent getWriteDataToFileComponent() throws IOException, NoSuchAlgorithmException {
         Customer customer = getCustomer();
         return new WriteDataToFileComponent(customer.getId() + ".txt");
+    }
+
+    public static WriteProfileService getWriteProfileService() throws IOException, NoSuchAlgorithmException {
+        return new WriteProfileService(getWriteDataToFileComponent());
     }
 }

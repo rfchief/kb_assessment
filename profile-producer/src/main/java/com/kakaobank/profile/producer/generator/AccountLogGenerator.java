@@ -15,7 +15,7 @@ public class AccountLogGenerator {
     }
 
     public EventLog doGenerate(Customer customer) {
-        return doGenerate(customer, getRandomEventType());
+        return doGenerate(customer, getRandomEventTypeWithoutJoinAndCreate());
     }
 
     public EventLog doGenerate(Customer customer, EventType eventType) {
@@ -46,8 +46,8 @@ public class AccountLogGenerator {
         return ThreadLocalRandom.current().nextInt(MAX_BOUND_FOR_AMOUNT);
     }
 
-    private EventType getRandomEventType() {
-        return EventType.getRandom();
+    private EventType getRandomEventTypeWithoutJoinAndCreate() {
+        return EventType.getRandomWithoutJoinAndCreate();
     }
 
 }
