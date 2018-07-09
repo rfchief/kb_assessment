@@ -1,6 +1,7 @@
 package com.kakaobank.profile.producer.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -54,5 +55,10 @@ public class EventLog implements Serializable {
 
     public void setEventTime(LocalDateTime eventTime) {
         this.eventTime = eventTime;
+    }
+
+    @JsonIgnore
+    public boolean isValid() {
+        return customer != null && customer.isValid() && eventType != null;
     }
 }

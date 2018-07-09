@@ -1,5 +1,10 @@
 package com.kakaobank.profile.producer.util;
 
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.kakaobank.profile.producer.component.MessageConverter;
 import com.kakaobank.profile.producer.component.WriteDataToFileComponent;
 import com.kakaobank.profile.producer.generator.AccountLogGenerator;
 import com.kakaobank.profile.producer.generator.CustomerProfileGenerator;
@@ -33,16 +38,24 @@ public class TestDataFactory {
         return new AccountLogGenerator(maxBoundForAmount);
     }
 
-    public static WriteDataToFileComponent getWriteDataToFileComponent() throws IOException, NoSuchAlgorithmException {
-        Customer customer = getCustomer();
-        return new WriteDataToFileComponent(customer.getId() + ".txt");
+    public static WriteDataToFileComponent getWriteDataToFileComponent(String filePath) throws IOException {
+        return new WriteDataToFileComponent(filePath);
     }
 
-    public static WriteProfileService getWriteProfileService() throws IOException, NoSuchAlgorithmException {
-        return new WriteProfileService(getWriteDataToFileComponent());
+    public static WriteProfileService getWriteProfileService(String filePath) throws IOException {
+        return new WriteProfileService(getWriteDataToFileComponent(filePath), getMessageConverter());
     }
 
     public static EventLog getEventLog() throws NoSuchAlgorithmException {
         return getAccountLogGenerator().doGenerate(getCustomer());
+    }
+
+    public static MessageConverter getMessageConverter() {
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
+        objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+        objectMapper.registerModule(new JavaTimeModule());
+
+        return new MessageConverter(objectMapper);
     }
 }

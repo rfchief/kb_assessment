@@ -24,7 +24,7 @@ public class ProfileWorkerTest {
         customer = TestDataFactory.getCustomer();
         maxLogCount = 100;
         AccountLogGenerator accountLogGenerator = TestDataFactory.getAccountLogGenerator();
-        WriteProfileService writeProfileService = TestDataFactory.getWriteProfileService();
+        WriteProfileService writeProfileService = TestDataFactory.getWriteProfileService("log/test.log");
         this.worker = new ProfileWorker(customer, maxLogCount, accountLogGenerator, writeProfileService);
     }
 

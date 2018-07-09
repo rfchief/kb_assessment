@@ -36,7 +36,7 @@ public class BeanFactory {
     }
 
     public static WriteProfileService createWriteProfileService(String filePath) throws IOException {
-        return new WriteProfileService(createWriteDataToFileComponent(filePath));
+        return new WriteProfileService(createWriteDataToFileComponent(filePath), createMessageConverter());
     }
 
 }

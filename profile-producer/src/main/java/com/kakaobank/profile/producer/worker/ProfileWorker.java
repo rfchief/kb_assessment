@@ -29,7 +29,12 @@ public class ProfileWorker implements Callable<Integer> {
 
     @Override
     public Integer call() throws Exception {
-        return doProcess();
+        writeProfileService.open();
+        Integer logCount = doProcess();
+        writeProfileService.close();
+
+        return logCount;
+
     }
 
     private Integer doProcess() {
