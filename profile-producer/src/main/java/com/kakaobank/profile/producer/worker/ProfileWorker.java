@@ -5,10 +5,13 @@ import com.kakaobank.profile.producer.model.Customer;
 import com.kakaobank.profile.producer.model.EventLog;
 import com.kakaobank.profile.producer.model.EventType;
 import com.kakaobank.profile.producer.service.WriteProfileService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.Callable;
 
 public class ProfileWorker implements Callable<Integer> {
+    private final Logger logger = LoggerFactory.getLogger(ProfileWorker.class);
 
     private final Customer customer;
     private final int maxLogCount;
@@ -33,11 +36,12 @@ public class ProfileWorker implements Callable<Integer> {
         int logCount = 0;
         EventLog joinEventLog = accountLogGenerator.doGenerateJoinEvent(customer);
         EventLog createAccountEventLog = accountLogGenerator.doGenerate(customer, EventType.CREATE);
+        sendJoinAndCreateAccountEventLogs(joinEventLog, createAccountEventLog);
 
-        //send join and create eventlog
-        writeProfileService.write(joinEventLog);
-        writeProfileService.write(createAccountEventLog);
+        return generateAndSendEventLogs(logCount);
+    }
 
+    private int generateAndSendEventLogs(int logCount) {
         for (int i = 0; i < maxLogCount; i++) {
             EventLog eventLog = accountLogGenerator.doGenerate(customer);
             boolean isSuccess = writeProfileService.write(eventLog);
@@ -45,9 +49,13 @@ public class ProfileWorker implements Callable<Integer> {
             if(isSuccess)
                 logCount++;
             else
-                System.out.println("Failed to write eventLog. [Event Log ID : " + eventLog.getSeq() + "]");
+                logger.error(String.format("Failed to write eventLog. [Customer ID : %s Event Log Seq : %ld ]", customer.getId(), eventLog.getSeq()));
         }
-
         return logCount;
+    }
+
+    private void sendJoinAndCreateAccountEventLogs(EventLog joinEventLog, EventLog createAccountEventLog) {
+        writeProfileService.write(joinEventLog);
+        writeProfileService.write(createAccountEventLog);
     }
 }

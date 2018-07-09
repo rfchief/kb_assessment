@@ -1,5 +1,9 @@
 package com.kakaobank.profile.producer.component;
 
+import com.kakaobank.profile.producer.worker.ProfileWorker;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.annotation.PreDestroy;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -7,6 +11,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WriteDataToFileComponent {
+    private final Logger logger = LoggerFactory.getLogger(WriteDataToFileComponent.class);
+
     private String filePath;
     private BufferedWriter out;
 
@@ -20,7 +26,7 @@ public class WriteDataToFileComponent {
 
     @PreDestroy
     public void close() throws IOException {
-        System.out.println("Closing File...... [ File : " + filePath + "]");
+        logger.info("Closing File...... [ File : " + filePath + "]");
         if(out != null)
             out.close();
     }
