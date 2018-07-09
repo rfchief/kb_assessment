@@ -11,8 +11,10 @@
 
     <artifactId>profiler-producer</artifactId>
 
-    <dependencies>
+    <properties>
+    </properties>
 
+    <dependencies>
     </dependencies>
 
     <build>

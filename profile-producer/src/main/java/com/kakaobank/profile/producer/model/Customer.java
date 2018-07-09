@@ -1,5 +1,7 @@
 package com.kakaobank.profile.producer.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.kakaobank.profile.producer.util.StringUtil;
 
 import java.io.Serializable;
@@ -11,7 +13,11 @@ public class Customer implements Serializable {
 
     private String id;
     private String name;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS")
     private LocalDateTime joinDt;
+
+    public Customer() {
+    }
 
     public Customer(String id, String name, LocalDateTime joinDt) {
         this.id = id;
@@ -43,6 +49,7 @@ public class Customer implements Serializable {
         this.joinDt = joinDt;
     }
 
+    @JsonIgnore
     public boolean isValid() {
         if(StringUtil.isEmpty(id))
             return false;

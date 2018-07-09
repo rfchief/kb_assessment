@@ -1,5 +1,7 @@
 package com.kakaobank.profile.producer.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
@@ -11,6 +13,7 @@ public class EventLog implements Serializable {
     private EventType eventType;
     private Customer customer;
     private int amount;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS")
     private LocalDateTime eventTime;
 
     public long getSeq() {
