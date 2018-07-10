@@ -4,13 +4,19 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.kakaobank.profile.producer.component.MessageConverter;
 import com.kakaobank.profile.producer.component.WriteDataToFileComponent;
+import com.kakaobank.profile.producer.component.WriteDataToKafkaComponent;
+import com.kakaobank.profile.producer.component.impl.MessageConverter;
+import com.kakaobank.profile.producer.component.impl.WriteDataToFileComponentImpl;
+import com.kakaobank.profile.producer.component.mock.MockWriteDataToKafkaComponent;
 import com.kakaobank.profile.producer.generator.AccountLogGenerator;
 import com.kakaobank.profile.producer.generator.CustomerProfileGenerator;
 import com.kakaobank.profile.producer.model.Customer;
 import com.kakaobank.profile.producer.model.EventLog;
 import com.kakaobank.profile.producer.service.WriteProfileService;
+import com.kakaobank.profile.producer.service.impl.WriteProfileServiceImpl;
+import org.apache.kafka.clients.producer.MockProducer;
+import org.apache.kafka.common.serialization.StringSerializer;
 
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
@@ -39,11 +45,17 @@ public class TestDataFactory {
     }
 
     public static WriteDataToFileComponent getWriteDataToFileComponent(String filePath) throws IOException {
-        return new WriteDataToFileComponent(filePath);
+        return new WriteDataToFileComponentImpl(filePath);
     }
 
     public static WriteProfileService getWriteProfileService(String filePath) throws IOException {
-        return new WriteProfileService(getWriteDataToFileComponent(filePath), getMessageConverter());
+        return new WriteProfileServiceImpl(getWriteDataToFileComponent(filePath), getWriteDataToKafkaComponent(), getMessageConverter());
+    }
+
+    public static WriteDataToKafkaComponent getWriteDataToKafkaComponent() {
+        MockProducer<String, String> mockProducer = new MockProducer<String, String>(
+                true, new StringSerializer(), new StringSerializer());
+        return new MockWriteDataToKafkaComponent(mockProducer, "test");
     }
 
     public static EventLog getEventLog() throws NoSuchAlgorithmException {

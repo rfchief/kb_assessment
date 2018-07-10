@@ -1,6 +1,6 @@
 package com.kakaobank.profile.producer.worker;
 
-import com.kakaobank.profile.producer.component.MessageConverter;
+import com.kakaobank.profile.producer.component.impl.MessageConverter;
 import com.kakaobank.profile.producer.generator.AccountLogGenerator;
 import com.kakaobank.profile.producer.model.Customer;
 import com.kakaobank.profile.producer.model.EventLog;

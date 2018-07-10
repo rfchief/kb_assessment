@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <property name="LOG_PATH" value="logs/profile-producer/"/>
+
+    <!-- Application Log -->
+    <include resource="logback/application-appender.xml"/>
+    <include resource="logback/error-appender.xml"/>
+    <include resource="logback/console-appender.xml"/>
+
+    <logger name="com.kakaobank" level="INFO"/>
+
+    <root level="INFO">
+        <appender-ref ref="APPLICATION"/>
+        <appender-ref ref="ERROR"/>
+        <appender-ref ref="CONSOLE"/>
+    </root>
+</configuration>

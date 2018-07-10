@@ -1,4 +1,4 @@
-package com.kakaobank.profile.producer.component;
+package com.kakaobank.profile.producer.component.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;

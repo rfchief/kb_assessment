@@ -1,7 +1,5 @@
 package com.kakaobank.profile.producer.service;
 
-import com.kakaobank.profile.producer.component.MessageConverter;
-import com.kakaobank.profile.producer.component.WriteDataToFileComponent;
 import com.kakaobank.profile.producer.model.EventLog;
 import com.kakaobank.profile.producer.util.FileReader;
 import com.kakaobank.profile.producer.util.TestDataFactory;
@@ -25,15 +23,9 @@ public class WriteProfileServiceTest {
     @Before
     public void setup() throws IOException, NoSuchAlgorithmException {
         this.filePath = "logs/test.log";
-        this.service = getWriteProfileService();
+        this.service = TestDataFactory.getWriteProfileService(filePath);
 
         service.open();
-    }
-
-    private WriteProfileService getWriteProfileService() throws IOException {
-        WriteDataToFileComponent writeDataToFileComponent = TestDataFactory.getWriteDataToFileComponent(filePath);
-        MessageConverter messageConverter = TestDataFactory.getMessageConverter();
-        return new WriteProfileService(writeDataToFileComponent, messageConverter);
     }
 
     @After

@@ -4,13 +4,19 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.kakaobank.profile.producer.component.MessageConverter;
+import com.kakaobank.profile.producer.component.WriteDataToKafkaComponent;
+import com.kakaobank.profile.producer.component.impl.MessageConverter;
 import com.kakaobank.profile.producer.component.WriteDataToFileComponent;
+import com.kakaobank.profile.producer.component.impl.WriteDataToFileComponentImpl;
+import com.kakaobank.profile.producer.component.impl.WriteDataToKafkaComponentImpl;
 import com.kakaobank.profile.producer.generator.AccountLogGenerator;
 import com.kakaobank.profile.producer.generator.CustomerProfileGenerator;
 import com.kakaobank.profile.producer.service.WriteProfileService;
+import com.kakaobank.profile.producer.service.impl.WriteProfileServiceImpl;
+import org.apache.kafka.clients.producer.KafkaProducer;
 
 import java.io.IOException;
+import java.util.Properties;
 
 public class BeanFactory {
 
@@ -24,7 +30,11 @@ public class BeanFactory {
     }
 
     public static WriteDataToFileComponent createWriteDataToFileComponent(String filePath) throws IOException {
-        return new WriteDataToFileComponent(filePath);
+        return new WriteDataToFileComponentImpl(filePath);
+    }
+
+    public static WriteDataToKafkaComponent createWriteDataToKafkaComponent(Properties configs, String kafkaTopic) {
+        return new WriteDataToKafkaComponentImpl(new KafkaProducer<String, String>(configs), kafkaTopic);
     }
 
     public static AccountLogGenerator createAccountLogGenerator(int maxBoundForAmount) {
@@ -35,8 +45,10 @@ public class BeanFactory {
         return new CustomerProfileGenerator();
     }
 
-    public static WriteProfileService createWriteProfileService(String filePath) throws IOException {
-        return new WriteProfileService(createWriteDataToFileComponent(filePath), createMessageConverter());
+    public static WriteProfileService createWriteProfileService(String filePath, String kafkaTopic, Properties kafkaConfigs) throws IOException {
+        return new WriteProfileServiceImpl(createWriteDataToFileComponent(filePath), createWriteDataToKafkaComponent(kafkaConfigs, kafkaTopic), createMessageConverter());
     }
+
+
 
 }

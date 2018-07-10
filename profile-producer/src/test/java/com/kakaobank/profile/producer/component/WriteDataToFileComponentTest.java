@@ -1,5 +1,6 @@
 package com.kakaobank.profile.producer.component;
 
+import com.kakaobank.profile.producer.component.impl.WriteDataToFileComponentImpl;
 import com.kakaobank.profile.producer.util.TestDataFactory;
 import org.junit.After;
 import org.junit.Assert;
@@ -23,7 +24,7 @@ public class WriteDataToFileComponentTest {
     @Before
     public void setup() throws NoSuchAlgorithmException, IOException {
         this.filePath = "logs/test.txt";
-        this.component = new WriteDataToFileComponent(filePath);
+        this.component = new WriteDataToFileComponentImpl(filePath);
         this.component.open();
         this.content = TestDataFactory.getCustomer().toString();
     }
