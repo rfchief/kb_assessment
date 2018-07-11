@@ -21,6 +21,7 @@ import org.apache.kafka.common.serialization.StringSerializer;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.time.LocalDateTime;
+import java.util.Properties;
 
 public class TestDataFactory {
 
@@ -60,6 +61,19 @@ public class TestDataFactory {
 
     public static EventLog getEventLog() throws NoSuchAlgorithmException {
         return getAccountLogGenerator().doGenerate(getCustomer());
+    }
+
+    public static Properties getProperties() {
+        Properties properties = new Properties();
+        properties.put("kafka.producer.bootstrap.servers", "localhost:9092");
+        properties.put("kafka.producer.acks", "1");
+        properties.put("kafka.producer.compression.type", "gzip");
+        properties.put("kafka.topic.name", "assessment");
+        properties.put("log.max.count", "100");
+        properties.put("customer.count", "10");
+        properties.put("customer.name.max.length", "20");
+
+        return properties;
     }
 
     public static MessageConverter getMessageConverter() {

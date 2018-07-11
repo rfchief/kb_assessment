@@ -16,7 +16,7 @@ public class WriteDataToFileComponentImpl implements WriteDataToFileComponent {
     private String filePath;
     private BufferedWriter out;
 
-    public WriteDataToFileComponentImpl(String filePath) throws IOException {
+    public WriteDataToFileComponentImpl(String filePath) {
         this.filePath = filePath;
     }
 

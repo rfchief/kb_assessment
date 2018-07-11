@@ -28,13 +28,15 @@ public class ProfileWorkerTest {
     private int maxLogCount;
     private String filePath = "logs/test.log";
     private MessageConverter messageConverter;
+    private AccountLogGenerator accountLogGenerator;
+    private WriteProfileService writeProfileService;
 
     @Before
     public void setup() throws NoSuchAlgorithmException, IOException {
         customer = TestDataFactory.getCustomer();
         maxLogCount = 100;
-        AccountLogGenerator accountLogGenerator = TestDataFactory.getAccountLogGenerator();
-        WriteProfileService writeProfileService = TestDataFactory.getWriteProfileService(filePath);
+        accountLogGenerator = TestDataFactory.getAccountLogGenerator();
+        writeProfileService = TestDataFactory.getWriteProfileService(filePath);
         this.messageConverter = TestDataFactory.getMessageConverter();
         this.worker = new ProfileWorker(customer, maxLogCount, accountLogGenerator, writeProfileService);
     }
@@ -49,24 +51,24 @@ public class ProfileWorkerTest {
         System.out.println("Everything is OK!!!");
     }
 
-    @Test
-    public void givenEmptyCustomerAndMaxLogCount_whenCall_thenReturnZeroTest() throws Exception {
+    @Test(expected = IllegalArgumentException.class)
+    public void givenEmptyCustomerAndMaxLogCount_whenExecute_thenThrowIllegalArgumentExceptionTest() throws Exception {
         //given
-        ProfileWorker givenProfileWorker = new ProfileWorker(null, maxLogCount, null, null);
+        ProfileWorker givenProfileWorker = new ProfileWorker(null, maxLogCount, accountLogGenerator, writeProfileService);
 
         //when
-        int actual = givenProfileWorker.call();
+        int actual = givenProfileWorker.execute();
 
         //then
         Assert.assertThat(actual, is(0));
     }
 
     @Test
-    public void givenCustomerAndMaxLogCount_whenCall_thenReturnSameMaxLogCountTest() throws Exception {
+    public void givenCustomerAndMaxLogCount_whenExecute_thenReturnSameMaxLogCountTest() throws Exception {
         //given
 
         //when
-        Integer actual = worker.call();
+        Integer actual = worker.execute();
 
         //then
         Assert.assertThat(actual, is(maxLogCount + 2));

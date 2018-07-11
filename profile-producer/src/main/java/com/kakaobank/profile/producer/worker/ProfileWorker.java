@@ -8,11 +8,11 @@ import com.kakaobank.profile.producer.service.WriteProfileService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Callable;
 
-public class ProfileWorker implements Callable<Integer> {
+public class ProfileWorker {
     private final Logger logger = LoggerFactory.getLogger(ProfileWorker.class);
 
     private final Customer customer;
@@ -29,13 +29,18 @@ public class ProfileWorker implements Callable<Integer> {
         this.writeProfileService = writeProfileService;
     }
 
-    @Override
-    public Integer call() throws Exception {
-        writeProfileService.open();
-        Integer logCount = doProcess();
-        writeProfileService.close();
+    public Integer execute() {
+        try {
+            writeProfileService.open();
+            Integer logCount = doProcess();
+            writeProfileService.close();
 
-        return logCount;
+            return logCount;
+        } catch (IOException e) {
+            logger.error("Failed to sending customer profiles. [ Message : " + e.getMessage() + "]");
+        }
+
+        return 0;
 
     }
 
