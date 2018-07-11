@@ -3,7 +3,7 @@ package com.kakaobank.profile.producer.service.impl;
 import com.kakaobank.profile.producer.Factory.BeanFactory;
 import com.kakaobank.profile.producer.generator.CustomerProfileGenerator;
 import com.kakaobank.profile.producer.model.Customer;
-import com.kakaobank.profile.producer.service.ProducerService;
+import com.kakaobank.profile.producer.service.ExecuteProcessService;
 import com.kakaobank.profile.producer.worker.ProfileWorker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,11 +14,11 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class ProducerServiceImpl implements ProducerService {
-    private final Logger logger = LoggerFactory.getLogger(ProducerServiceImpl.class);
+public class ExecuteProcessServiceImpl implements ExecuteProcessService {
+    private final Logger logger = LoggerFactory.getLogger(ExecuteProcessServiceImpl.class);
     private final CustomerProfileGenerator customerProfileGenerator;
 
-    public ProducerServiceImpl(CustomerProfileGenerator customerProfileGenerator) {
+    public ExecuteProcessServiceImpl(CustomerProfileGenerator customerProfileGenerator) {
         this.customerProfileGenerator = customerProfileGenerator;
     }
 
@@ -36,7 +36,7 @@ public class ProducerServiceImpl implements ProducerService {
 
         try {
             for (Customer customer : customers) {
-                String filePathAndName = logFilePath + "/" + customer.getId();
+                String filePathAndName = getFilePathAndName(logFilePath, customer.getId());
                 ProfileWorker profileWorker = getProfileWorker(customer, maxLogCount, filePathAndName, kafkaConfigs, kafkaTopic);
 
                 Runnable task = getRunnableThread(countDownLatch, profileWorker);
@@ -58,10 +58,6 @@ public class ProducerServiceImpl implements ProducerService {
         return customerProfileGenerator.doGenerator(numCustomers, maxLengthOfName);
     }
 
-    private Properties getKafkaConfigs(Properties properties) {
-        return BeanFactory.createKafkaConfigs(properties);
-    }
-
     private Runnable getRunnableThread(CountDownLatch countDownLatch, ProfileWorker profileWorker) {
         return () -> {
                         profileWorker.execute();
@@ -77,4 +73,16 @@ public class ProducerServiceImpl implements ProducerService {
         logger.info("Created Fixed Thread Pool [Size : " + maxThreadCount + "]");
         return Executors.newFixedThreadPool(maxThreadCount);
     }
+
+    private String getFilePathAndName(String logFilePath, String customerId) {
+        if(logFilePath.endsWith("/"))
+            return logFilePath + customerId;
+
+        return logFilePath + "/" + customerId;
+    }
+
+    private Properties getKafkaConfigs(Properties properties) {
+        return BeanFactory.createKafkaConfigs(properties);
+    }
+
 }

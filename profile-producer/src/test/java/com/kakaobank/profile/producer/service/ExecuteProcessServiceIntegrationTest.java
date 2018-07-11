@@ -1,16 +1,16 @@
 package com.kakaobank.profile.producer.service;
 
 import com.kakaobank.profile.producer.generator.CustomerProfileGenerator;
-import com.kakaobank.profile.producer.service.impl.ProducerServiceImpl;
+import com.kakaobank.profile.producer.service.impl.ExecuteProcessServiceImpl;
 import com.kakaobank.profile.producer.util.TestDataFactory;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Properties;
 
-public class ProducerServiceIntegrationTest {
+public class ExecuteProcessServiceIntegrationTest {
 
-    private ProducerServiceImpl service;
+    private ExecuteProcessServiceImpl service;
     private Properties properties;
     private int maxThreadCount;
     private String filePath;
@@ -21,7 +21,7 @@ public class ProducerServiceIntegrationTest {
         properties = TestDataFactory.getProperties();
         maxThreadCount = 1;
         filePath = "logs/";
-        this.service = new ProducerServiceImpl(customerGenerator);
+        this.service = new ExecuteProcessServiceImpl(customerGenerator);
     }
 
     @Test

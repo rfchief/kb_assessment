@@ -12,12 +12,13 @@ import com.kakaobank.profile.producer.component.impl.WriteDataToKafkaComponentIm
 import com.kakaobank.profile.producer.generator.AccountLogGenerator;
 import com.kakaobank.profile.producer.generator.CustomerProfileGenerator;
 import com.kakaobank.profile.producer.model.Customer;
+import com.kakaobank.profile.producer.service.ExecuteProcessService;
 import com.kakaobank.profile.producer.service.WriteProfileService;
+import com.kakaobank.profile.producer.service.impl.ExecuteProcessServiceImpl;
 import com.kakaobank.profile.producer.service.impl.WriteProfileServiceImpl;
 import com.kakaobank.profile.producer.worker.ProfileWorker;
 import org.apache.kafka.clients.producer.KafkaProducer;
 
-import java.io.IOException;
 import java.util.Properties;
 
 public class BeanFactory {
@@ -72,5 +73,9 @@ public class BeanFactory {
         kafkaConfigs.put("value.serializer", "org.apache.kafka.common.serialization.StringSerializer");
 
         return kafkaConfigs;
+    }
+
+    public static ExecuteProcessService createExecuteProcessService() {
+        return new ExecuteProcessServiceImpl(createCustomerProfileGenerator());
     }
 }
