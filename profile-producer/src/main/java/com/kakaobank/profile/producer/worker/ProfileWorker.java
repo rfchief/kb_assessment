@@ -52,31 +52,23 @@ public class ProfileWorker {
     private int generateAndSendEventLogs(int logCount) {
         int initialSize = logCount;
         for (int i = initialSize; i < maxLogCount + initialSize; i++) {
-            EventLog eventLog = getEventLog(i);
+            EventLog eventLog = accountLogGenerator.doGenerate(customer);
             boolean isSuccess = writeProfileService.write(eventLog);
 
             if(isSuccess)
                 logCount++;
             else
-                logger.error(String.format("Failed to write eventLog. [Customer ID : %s Event Log Seq : %ld ]", customer.getId(), eventLog.getSeq()));
+                logger.error(String.format("Failed to write eventLog. [Customer ID : %s]", customer.getNumber()));
         }
         return logCount;
     }
 
-    private EventLog getEventLog(int i) {
-        EventLog eventLog = accountLogGenerator.doGenerate(customer);
-        eventLog.setSeq(i);
-        return eventLog;
-    }
-
     private List<EventLog> getJoinAndCreateAccountEventLog() {
         List<EventLog> logs = new ArrayList<>();
-        EventLog joinEventLog = accountLogGenerator.doGenerateJoinEvent(customer);
-        joinEventLog.setSeq(0l);
+        EventLog joinEventLog = accountLogGenerator.doGenerate(customer, EventType.JOIN);
         logs.add(joinEventLog);
 
         EventLog createAccountEventLog = accountLogGenerator.doGenerate(customer, EventType.CREATE);
-        createAccountEventLog.setSeq(1l);
         logs.add(createAccountEventLog);
 
         return logs;

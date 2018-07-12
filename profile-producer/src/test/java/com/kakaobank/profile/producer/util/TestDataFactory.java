@@ -13,6 +13,7 @@ import com.kakaobank.profile.producer.generator.AccountLogGenerator;
 import com.kakaobank.profile.producer.generator.CustomerProfileGenerator;
 import com.kakaobank.profile.producer.model.Customer;
 import com.kakaobank.profile.producer.model.EventLog;
+import com.kakaobank.profile.producer.model.EventType;
 import com.kakaobank.profile.producer.service.WriteProfileService;
 import com.kakaobank.profile.producer.service.impl.WriteProfileServiceImpl;
 import org.apache.kafka.clients.producer.MockProducer;
@@ -20,6 +21,7 @@ import org.apache.kafka.common.serialization.StringSerializer;
 
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.Properties;
 
@@ -28,9 +30,7 @@ public class TestDataFactory {
     public static Customer getCustomer() throws NoSuchAlgorithmException {
         LocalDateTime now = LocalDateTime.now();
         String name = StringUtil.randomString(10, true);
-        String id = StringUtil.hash256(name + now.getNano());
-
-        return new Customer(id, name, now);
+        return new Customer(Instant.now().toEpochMilli(), name, now);
     }
 
     public static CustomerProfileGenerator getCustomerProfileGenerator() {
@@ -59,8 +59,8 @@ public class TestDataFactory {
         return new MockWriteDataToKafkaComponent(mockProducer, "test");
     }
 
-    public static EventLog getEventLog() throws NoSuchAlgorithmException {
-        return getAccountLogGenerator().doGenerate(getCustomer());
+    public static EventLog getTransferEventLog() throws NoSuchAlgorithmException {
+        return getAccountLogGenerator().doGenerate(getCustomer(), EventType.TRANSFER);
     }
 
     public static Properties getProperties() {

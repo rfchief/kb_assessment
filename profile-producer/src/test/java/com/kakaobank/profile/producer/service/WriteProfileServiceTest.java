@@ -54,8 +54,7 @@ public class WriteProfileServiceTest {
     @Test(expected = IllegalArgumentException.class)
     public void givenInvalidEventLog_whenWrite_thenThrowIllegalArgumentExceptionTest() throws NoSuchAlgorithmException {
         //given
-        EventLog invalidEventLog = TestDataFactory.getEventLog();
-        invalidEventLog.setCustomer(null);
+        EventLog invalidEventLog = TestDataFactory.getTransferEventLog();
 
         //when
         boolean actual = service.write(invalidEventLog);
@@ -67,7 +66,7 @@ public class WriteProfileServiceTest {
     @Test
     public void givenEventLog_whenWrite_thenWriteJsonStringOfEventLogAtFileTest() throws NoSuchAlgorithmException, IOException {
         //given
-        EventLog eventLog = TestDataFactory.getEventLog();
+        EventLog eventLog = TestDataFactory.getTransferEventLog();
 
         //when
         boolean actual = service.write(eventLog);

@@ -30,7 +30,7 @@ public class WriteProfileServiceImpl implements WriteProfileService {
     }
 
     public boolean write(EventLog eventLog) {
-        if(eventLog == null || !eventLog.isValid())
+        if(eventLog == null)
             throw new IllegalArgumentException("EventLog is not Valid");
 
         try {

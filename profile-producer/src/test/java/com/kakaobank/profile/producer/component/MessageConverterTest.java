@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.kakaobank.profile.producer.component.impl.MessageConverter;
 import com.kakaobank.profile.producer.model.EventLog;
+import com.kakaobank.profile.producer.model.TransferLog;
 import com.kakaobank.profile.producer.util.TestDataFactory;
 import org.junit.Assert;
 import org.junit.Before;
@@ -58,25 +59,16 @@ public class MessageConverterTest {
     @Test
     public void givenEventLog_whenConvert_thenReturnSuccessTest() throws IOException, NoSuchAlgorithmException {
         //given
-        EventLog givenEventLog = TestDataFactory.getEventLog();
+        EventLog givenEventLog = TestDataFactory.getTransferEventLog();
 
         //when
         String actual = messageConverter.convert(givenEventLog);
 
+        System.out.println(actual);
+
         //then
         Assert.assertThat(actual, is(notNullValue()));
-        EventLog actualEventLog = messageConverter.read(actual);
-        assertGivenAndActual(givenEventLog, actualEventLog);
+        EventLog actualEventLog = messageConverter.read(actual, TransferLog.class);
+        Assert.assertThat(givenEventLog.toString(), is(actualEventLog.toString()));
     }
-
-    private void assertGivenAndActual(EventLog eventLog, EventLog actualEventLog) {
-        Assert.assertThat(actualEventLog.getSeq(), is(eventLog.getSeq()));
-        Assert.assertThat(actualEventLog.getAmount(), is(eventLog.getAmount()));
-        Assert.assertThat(actualEventLog.getEventType(), is(eventLog.getEventType()));
-        Assert.assertThat(actualEventLog.getEventTime(), is(eventLog.getEventTime()));
-        Assert.assertThat(actualEventLog.getCustomer().getId(), is(eventLog.getCustomer().getId()));
-        Assert.assertThat(actualEventLog.getCustomer().getName(), is(eventLog.getCustomer().getName()));
-        Assert.assertThat(actualEventLog.getCustomer().getJoinDt(), is(eventLog.getCustomer().getJoinDt()));
-    }
-
 }

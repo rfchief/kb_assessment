@@ -17,15 +17,10 @@ public class CustomerProfileGenerator {
 
         List<Customer> customers = new ArrayList<Customer>();
         for (int i = 0; i < size; i++) {
-            try{
-                LocalDateTime joinDt = LocalDateTime.now();
-                String name = generateName(maxLengthOfName);
-                String id = StringUtil.hash256(name + joinDt.getNano());
+            LocalDateTime joinDt = LocalDateTime.now();
+            String name = generateName(maxLengthOfName);
 
-                customers.add(new Customer(id, name, joinDt));
-            } catch (NoSuchAlgorithmException e) {
-                e.printStackTrace();
-            }
+            customers.add(new Customer(i, name, joinDt));
         }
 
         return customers;

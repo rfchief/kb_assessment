@@ -1,10 +1,7 @@
 package com.kakaobank.profile.producer.worker;
 
-import com.kakaobank.profile.producer.component.impl.MessageConverter;
 import com.kakaobank.profile.producer.generator.AccountLogGenerator;
 import com.kakaobank.profile.producer.model.Customer;
-import com.kakaobank.profile.producer.model.EventLog;
-import com.kakaobank.profile.producer.model.EventType;
 import com.kakaobank.profile.producer.service.WriteProfileService;
 import com.kakaobank.profile.producer.util.FileReader;
 import com.kakaobank.profile.producer.util.TestDataFactory;
@@ -19,7 +16,6 @@ import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
 
 public class ProfileWorkerTest {
 
@@ -27,7 +23,6 @@ public class ProfileWorkerTest {
     private Customer customer;
     private int maxLogCount;
     private String filePath = "logs/test.log";
-    private MessageConverter messageConverter;
     private AccountLogGenerator accountLogGenerator;
     private WriteProfileService writeProfileService;
 
@@ -37,7 +32,6 @@ public class ProfileWorkerTest {
         maxLogCount = 100;
         accountLogGenerator = TestDataFactory.getAccountLogGenerator();
         writeProfileService = TestDataFactory.getWriteProfileService(filePath);
-        this.messageConverter = TestDataFactory.getMessageConverter();
         this.worker = new ProfileWorker(customer, maxLogCount, accountLogGenerator, writeProfileService);
     }
 
@@ -74,18 +68,5 @@ public class ProfileWorkerTest {
         Assert.assertThat(actual, is(maxLogCount + 2));
         List<String> contents = FileReader.readActualContent(filePath);
         Assert.assertThat(contents.size(), is(actual));
-        for (String content : contents) {
-            EventLog actualEventLog = messageConverter.read(content);
-            assertJoinAndCreateEvent(actualEventLog);
-            Assert.assertThat(actualEventLog.getCustomer(), is(notNullValue()));
-        }
     }
-
-    private void assertJoinAndCreateEvent(EventLog actualEventLog) {
-        if(actualEventLog.getSeq() == 0)
-            Assert.assertThat(actualEventLog.getEventType(), is(EventType.JOIN));
-        if(actualEventLog.getSeq() == 1)
-            Assert.assertThat(actualEventLog.getEventType(), is(EventType.CREATE));
-    }
-
 }

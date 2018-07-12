@@ -36,7 +36,7 @@ public class ExecuteProcessServiceImpl implements ExecuteProcessService {
 
         try {
             for (Customer customer : customers) {
-                String filePathAndName = getFilePathAndName(logFilePath, customer.getId());
+                String filePathAndName = getFilePathAndName(logFilePath, customer.getNumber());
                 ProfileWorker profileWorker = getProfileWorker(customer, maxLogCount, filePathAndName, kafkaConfigs, kafkaTopic);
 
                 Runnable task = getRunnableThread(countDownLatch, profileWorker);
@@ -74,7 +74,7 @@ public class ExecuteProcessServiceImpl implements ExecuteProcessService {
         return Executors.newFixedThreadPool(maxThreadCount);
     }
 
-    private String getFilePathAndName(String logFilePath, String customerId) {
+    private String getFilePathAndName(String logFilePath, long customerId) {
         if(logFilePath.endsWith("/"))
             return logFilePath + customerId;
 

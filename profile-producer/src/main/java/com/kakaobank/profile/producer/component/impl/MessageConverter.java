@@ -21,7 +21,7 @@ public class MessageConverter {
         return objectMapper.writeValueAsString(eventLog);
     }
 
-    public EventLog read(String jsonEventLog) throws IOException {
-        return objectMapper.readValue(jsonEventLog, EventLog.class);
+    public <T> T read(String jsonEventLog, Class<T> valueType) throws IOException {
+        return objectMapper.readValue(jsonEventLog, valueType);
     }
 }

@@ -1,5 +1,6 @@
-package com.kakaobank.profile.producer.model;
+package com.kakaobank.profile.consumer.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.kakaobank.profile.producer.util.StringUtil;
 
@@ -10,25 +11,26 @@ public class Customer implements Serializable {
 
     private static final long serialVersionUID = 6734151598372111728L;
 
-    private long number;
+    private String id;
     private String name;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS")
     private LocalDateTime joinDt;
 
     public Customer() {
     }
 
-    public Customer(long number, String name, LocalDateTime joinDt) {
-        this.number = number;
+    public Customer(String id, String name, LocalDateTime joinDt) {
+        this.id = id;
         this.name = name;
         this.joinDt = joinDt;
     }
 
-    public long getNumber() {
-        return number;
+    public String getId() {
+        return id;
     }
 
-    public void setNumber(long number) {
-        this.number = number;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -49,7 +51,7 @@ public class Customer implements Serializable {
 
     @JsonIgnore
     public boolean isValid() {
-        if(number < 0)
+        if(StringUtil.isEmpty(id))
             return false;
 
         if(StringUtil.isEmpty(name))
@@ -63,6 +65,6 @@ public class Customer implements Serializable {
 
     @Override
     public String toString() {
-        return number + "___" + name + "___" + joinDt.toString();
+        return id + "___" + name + "___" + joinDt.toString();
     }
 }
