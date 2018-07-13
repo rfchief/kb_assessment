@@ -1,6 +1,6 @@
 package com.kakaobank.profile.consumer.dao;
 
-import com.kakaobank.profile.consumer.dao.mock.MockCustomerDao;
+import com.kakaobank.profile.consumer.dao.memory.MemoryCustomerDao;
 import com.kakaobank.profile.consumer.model.Customer;
 import com.kakaobank.profile.consumer.util.ConsumerUtil;
 import com.kakaobank.profile.consumer.util.StringUtil;
@@ -18,7 +18,7 @@ public class CustomerDaoTest {
 
     @Before
     public void setup() {
-        this.dao = new MockCustomerDao();
+        this.dao = new MemoryCustomerDao();
     }
 
     @Test

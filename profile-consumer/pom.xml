@@ -14,7 +14,6 @@
     <properties>
         <spark-core.version>2.7.2</spark-core.version>
         <mariadb.version>2.2.5</mariadb.version>
-        <mybatis.version>3.4.6</mybatis.version>
     </properties>
 
     <dependencies>
@@ -28,12 +27,6 @@
             <artifactId>mariadb-java-client</artifactId>
             <version>${mariadb.version}</version>
         </dependency>
-        <dependency>
-            <groupId>org.mybatis</groupId>
-            <artifactId>mybatis</artifactId>
-            <version>${mybatis.version}</version>
-        </dependency>
-
     </dependencies>
 
     <build>

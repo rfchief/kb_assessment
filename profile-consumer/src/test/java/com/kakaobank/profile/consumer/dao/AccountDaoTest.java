@@ -1,12 +1,10 @@
 package com.kakaobank.profile.consumer.dao;
 
-import com.kakaobank.profile.consumer.dao.mock.MockAccountDao;
-import com.kakaobank.profile.consumer.dao.mock.MockCustomerDao;
+import com.kakaobank.profile.consumer.dao.memory.MemoryAccountDao;
 import com.kakaobank.profile.consumer.model.Account;
-import com.kakaobank.profile.consumer.model.Customer;
+import com.kakaobank.profile.consumer.model.EventType;
 import com.kakaobank.profile.consumer.model.log.AccountLog;
 import com.kakaobank.profile.consumer.util.ConsumerUtil;
-import com.kakaobank.profile.consumer.util.StringUtil;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -22,7 +20,7 @@ public class AccountDaoTest {
 
     @Before
     public void setup() {
-        this.dao = new MockAccountDao();
+        this.dao = new MemoryAccountDao();
     }
 
     @Test
@@ -64,12 +62,16 @@ public class AccountDaoTest {
     public void givenDepositAccountLog_whenInsertAccountLog_thenSaveDepositEventLogTest() {
         //given
         AccountLog given = new AccountLog();
+        given.setSeq(1l);
+        given.setAccountNumber(String.valueOf(ConsumerUtil.getRandomNumber(9000000)));
+        given.setEventType(EventType.DEPOSIT);
+        given.setDateTime(LocalDateTime.now());
 
         //when
         dao.insert(given);
 
         //then
-        List<AccountLog> actual = dao.findAccountLogByAccountNumber(given.getAccountNumber());
+        List<AccountLog> actual = dao.findAllLogsByAccountNumber(given.getAccountNumber(), 0, 10);
         Assert.assertThat(actual, is(notNullValue()));
         Assert.assertThat(actual.size(), is(1));
         Assert.assertThat(actual.get(0), is(given));

@@ -1,4 +1,4 @@
-package com.kakaobank.profile.consumer.dao.mock;
+package com.kakaobank.profile.consumer.dao.memory;
 
 import com.kakaobank.profile.consumer.dao.CustomerDao;
 import com.kakaobank.profile.consumer.model.Account;
@@ -7,7 +7,7 @@ import com.kakaobank.profile.consumer.model.Customer;
 import java.util.HashMap;
 import java.util.Map;
 
-public class MockCustomerDao implements CustomerDao {
+public class MemoryCustomerDao implements CustomerDao {
 
     private Map<Long, Customer> customerRepository = new HashMap<>();
     private Map<Long, HashMap<String, Account>> accountRepository = new HashMap<>();

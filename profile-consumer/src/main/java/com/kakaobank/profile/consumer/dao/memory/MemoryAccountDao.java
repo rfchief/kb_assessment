@@ -1,4 +1,4 @@
-package com.kakaobank.profile.consumer.dao.mock;
+package com.kakaobank.profile.consumer.dao.memory;
 
 import com.kakaobank.profile.consumer.dao.AccountDao;
 import com.kakaobank.profile.consumer.model.Account;
@@ -9,14 +9,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class MockAccountDao implements AccountDao {
+public class MemoryAccountDao implements AccountDao {
 
     private Map<Long, HashMap<String, Account>> accountRepository = new HashMap<>();
-    private Map<Long, List<AccountLog>> accountLogRepository = new HashMap<>();
+    private Map<String, List<AccountLog>> accountLogRepository = new HashMap<>();
 
     @Override
     public Account findByCustomerNumberAndAccountNumber(long customerNumber, String accountNumber) {
-        return null;
+        if(!accountRepository.containsKey(customerNumber))
+            return null;
+
+        return accountRepository.get(customerNumber).get(accountNumber);
     }
 
     @Override
@@ -34,10 +37,21 @@ public class MockAccountDao implements AccountDao {
         List<AccountLog> logs = null;
         if(!accountRepository.containsKey(accountLog.getAccountNumber()))
             logs = new ArrayList<>();
+
+        logs.add(accountLog);
+        accountLogRepository.put(accountLog.getAccountNumber(), logs);
     }
 
     @Override
-    public List<AccountLog> findAccountLogByAccountNumber(String accountNumber) {
-        return null;
+    public List<AccountLog> findAllLogsByAccountNumber(String accountNumber, int offset, int size) {
+        if(!accountLogRepository.containsKey(accountNumber))
+            return null;
+
+        int totalCount = accountLogRepository.get(accountNumber).size();
+        int fromIndex = offset * size;
+        int toIndex = fromIndex + size > totalCount ? totalCount : fromIndex + size;
+
+        return accountLogRepository.get(accountNumber).subList(fromIndex, toIndex);
     }
+
 }
