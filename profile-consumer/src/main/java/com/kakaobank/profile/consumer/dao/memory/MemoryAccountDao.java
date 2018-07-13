@@ -10,11 +10,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicLong;
 
 public class MemoryAccountDao implements AccountDao {
 
     private Map<Long, HashMap<String, Account>> accountRepository = new ConcurrentHashMap<>();
     private Map<String, List<AccountLog>> accountLogRepository = new ConcurrentHashMap<>();
+    private Map<String, AtomicLong> accountLogSeqRepository = new ConcurrentHashMap<>();
     private Map<String, AccountAmount> accountAmountRepository = new ConcurrentHashMap<>();
 
     @Override
@@ -51,8 +53,11 @@ public class MemoryAccountDao implements AccountDao {
         List<AccountLog> logs = null;
         if(isExistAccountLog(accountLog.getAccountNumber()))
             logs = accountLogRepository.get(accountLog.getAccountNumber());
-        else
+        else {
             logs = new ArrayList<>();
+            accountLogSeqRepository = new HashMap<>();
+            accountLogSeqRepository.put(accountLog.getAccountNumber(), new AtomicLong(0));
+        }
 
         appendAccountLog(accountLog, logs);
         updateAccountAmount(accountLog);
@@ -108,6 +113,9 @@ public class MemoryAccountDao implements AccountDao {
     }
 
     private void appendAccountLog(AccountLog accountLog, List<AccountLog> logs) {
+        long seq = accountLogSeqRepository.get(accountLog.getAccountNumber()).getAndIncrement();
+        accountLog.setSeq(seq);
+
         logs.add(accountLog);
         accountLogRepository.put(accountLog.getAccountNumber(), logs);
     }
