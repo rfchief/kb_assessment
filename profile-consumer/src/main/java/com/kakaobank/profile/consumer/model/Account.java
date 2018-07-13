@@ -6,7 +6,7 @@ public class Account {
 
     private long customerNumber;
     private String accountNumber;
-    private long balance;
+    private AccountAmount amount;
     private LocalDateTime createDt;
 
     public long getCustomerNumber() {
@@ -25,12 +25,12 @@ public class Account {
         this.accountNumber = accountNumber;
     }
 
-    public long getBalance() {
-        return balance;
+    public AccountAmount getAmount() {
+        return amount;
     }
 
-    public void setBalance(long balance) {
-        this.balance = balance;
+    public void setAmount(AccountAmount amount) {
+        this.amount = amount;
     }
 
     public LocalDateTime getCreateDt() {
@@ -43,6 +43,6 @@ public class Account {
 
     @Override
     public String toString() {
-        return customerNumber + "___" + accountNumber + "___" + balance + "___" + createDt.toString();
+        return customerNumber + "___" + accountNumber + "___" + amount.toString() + "___" + createDt.toString();
     }
 }

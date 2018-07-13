@@ -2,14 +2,14 @@ package com.kakaobank.profile.consumer.dao;
 
 import com.kakaobank.profile.consumer.dao.memory.MemoryAccountDao;
 import com.kakaobank.profile.consumer.model.Account;
-import com.kakaobank.profile.consumer.model.EventType;
+import com.kakaobank.profile.consumer.model.AccountAmount;
 import com.kakaobank.profile.consumer.model.log.AccountLog;
-import com.kakaobank.profile.consumer.util.ConsumerUtil;
+import com.kakaobank.profile.consumer.util.TestDataFactory;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.*;
@@ -44,10 +44,7 @@ public class AccountDaoTest {
     @Test
     public void givenAccount_whenInsert_thenSaveAccountToRepositoryTest() {
         //given
-        Account givenAccount = new Account();
-        givenAccount.setCustomerNumber(ConsumerUtil.getRandomNumber(1000));
-        givenAccount.setAccountNumber(String.valueOf(ConsumerUtil.getRandomNumber(100000000)));
-        givenAccount.setBalance(ConsumerUtil.getRandomNumber(10000000));
+        Account givenAccount = TestDataFactory.getAccount();
 
         //when
         dao.insert(givenAccount);
@@ -61,11 +58,9 @@ public class AccountDaoTest {
     @Test
     public void givenDepositAccountLog_whenInsertAccountLog_thenSaveDepositEventLogTest() {
         //given
-        AccountLog given = new AccountLog();
-        given.setSeq(1l);
-        given.setAccountNumber(String.valueOf(ConsumerUtil.getRandomNumber(9000000)));
-        given.setEventType(EventType.DEPOSIT);
-        given.setDateTime(LocalDateTime.now());
+        Account account = TestDataFactory.getAccount();
+        AccountLog given = TestDataFactory.getDepositLog(1, account.getAccountNumber());
+        dao.insert(account);
 
         //when
         dao.insert(given);
@@ -75,5 +70,42 @@ public class AccountDaoTest {
         Assert.assertThat(actual, is(notNullValue()));
         Assert.assertThat(actual.size(), is(1));
         Assert.assertThat(actual.get(0), is(given));
+    }
+
+    @Test
+    public void givenAccountLogsAndInsertAccountLogs_whenFindByLargestAmount_thenReturnAccountLargestAmountTest() {
+        //given
+        Account givenAccount = TestDataFactory.getAccount();
+        dao.insert(givenAccount);
+
+        String accountNumber = givenAccount.getAccountNumber();
+        List<AccountLog> logs = getTestAccountLogs(accountNumber);
+
+        //when
+        for (AccountLog log : logs)
+            dao.insert(log);
+
+        //then
+        AccountAmount actual = dao.findAmountByAccountNumber(accountNumber);
+
+        Assert.assertThat(dao.countAll(accountNumber), is(logs.size()));
+        Assert.assertThat(actual.getBalance(), not(0));
+        assertLargerThanZero(actual.getLargestDepositAmount());
+        assertLargerThanZero(actual.getLargestWithdrawalAmount());
+        assertLargerThanZero(actual.getLargestTransferAmount());
+    }
+
+    private void assertLargerThanZero(long actual) {
+        Assert.assertTrue(actual >= 0 );
+    }
+
+    private List<AccountLog> getTestAccountLogs(String accountNumber) {
+        List<AccountLog> logs = new ArrayList<>();
+        logs.add(TestDataFactory.getDepositLog(1, accountNumber));
+        logs.add(TestDataFactory.getTransferLog(2, accountNumber));
+        logs.add(TestDataFactory.getTransferLog(3, accountNumber));
+        logs.add(TestDataFactory.getDepositLog(4, accountNumber));
+        logs.add(TestDataFactory.getWithdrawalLog(5, accountNumber));
+        return logs;
     }
 }

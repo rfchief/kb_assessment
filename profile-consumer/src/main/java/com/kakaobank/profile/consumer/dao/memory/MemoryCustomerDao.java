@@ -6,11 +6,12 @@ import com.kakaobank.profile.consumer.model.Customer;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class MemoryCustomerDao implements CustomerDao {
 
-    private Map<Long, Customer> customerRepository = new HashMap<>();
-    private Map<Long, HashMap<String, Account>> accountRepository = new HashMap<>();
+    private Map<Long, Customer> customerRepository = new ConcurrentHashMap<>();
+    private Map<Long, HashMap<String, Account>> accountRepository = new ConcurrentHashMap<>();
 
     @Override
     public Customer findByNumber(long number) {
