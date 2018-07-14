@@ -60,7 +60,7 @@ public class TestDataFactory {
     }
 
     public static EventLog getTransferEventLog() throws NoSuchAlgorithmException {
-        return getAccountLogGenerator().doGenerate(getCustomer(), EventType.TRANSFER);
+        return getAccountLogGenerator().doGenerate(getCustomer(), "12345", EventType.TRANSFER);
     }
 
     public static Properties getProperties() {

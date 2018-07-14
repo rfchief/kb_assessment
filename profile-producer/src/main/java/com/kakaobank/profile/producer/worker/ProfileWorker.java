@@ -1,6 +1,7 @@
 package com.kakaobank.profile.producer.worker;
 
 import com.kakaobank.profile.producer.generator.AccountLogGenerator;
+import com.kakaobank.profile.producer.model.CreateAccountLog;
 import com.kakaobank.profile.producer.model.Customer;
 import com.kakaobank.profile.producer.model.EventLog;
 import com.kakaobank.profile.producer.model.EventType;
@@ -45,14 +46,17 @@ public class ProfileWorker {
     }
 
     private Integer doProcess() {
-        int logCount = sendJoinAndCreateAccountEventLogs(getJoinAndCreateAccountEventLog(), 0);
-        return generateAndSendEventLogs(logCount);
+        List<EventLog> joinAndCreateAccountEventLog = getJoinAndCreateAccountEventLog();
+        int logCount = sendJoinAndCreateAccountEventLogs(joinAndCreateAccountEventLog, 0);
+        CreateAccountLog createAccountLog = (CreateAccountLog) joinAndCreateAccountEventLog.get(1);
+
+        return generateAndSendEventLogs(logCount, createAccountLog.getAccountNumber());
     }
 
-    private int generateAndSendEventLogs(int logCount) {
+    private int generateAndSendEventLogs(int logCount, String accountNumber) {
         int initialSize = logCount;
         for (int i = initialSize; i < maxLogCount + initialSize; i++) {
-            EventLog eventLog = accountLogGenerator.doGenerate(customer);
+            EventLog eventLog = accountLogGenerator.doGenerate(customer, accountNumber);
             boolean isSuccess = writeProfileService.write(eventLog);
 
             if(isSuccess)
@@ -65,10 +69,10 @@ public class ProfileWorker {
 
     private List<EventLog> getJoinAndCreateAccountEventLog() {
         List<EventLog> logs = new ArrayList<>();
-        EventLog joinEventLog = accountLogGenerator.doGenerate(customer, EventType.JOIN);
+        EventLog joinEventLog = accountLogGenerator.doGenerate(customer, null, EventType.JOIN);
         logs.add(joinEventLog);
 
-        EventLog createAccountEventLog = accountLogGenerator.doGenerate(customer, EventType.CREATE);
+        EventLog createAccountEventLog = accountLogGenerator.doGenerate(customer, null, EventType.CREATE);
         logs.add(createAccountEventLog);
 
         return logs;

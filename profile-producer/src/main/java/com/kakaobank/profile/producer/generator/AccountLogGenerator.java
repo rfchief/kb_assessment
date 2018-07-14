@@ -15,20 +15,18 @@ public class AccountLogGenerator {
         this.MAX_BOUND = maxBoundForAmount * 99;
     }
 
-    public EventLog doGenerate(Customer customer) {
-        return doGenerate(customer, getRandomEventTypeWithoutJoinAndCreate());
+    public EventLog doGenerate(Customer customer, String accountNumber) {
+        return doGenerate(customer, accountNumber, getRandomEventTypeWithoutJoinAndCreate());
     }
 
-    public EventLog doGenerate(Customer customer, EventType eventType) {
+    public EventLog doGenerate(Customer customer, String accountNumber, EventType eventType) {
         if(customer == null)
             throw new IllegalArgumentException("Customer info is empty!!!!");
 
-        LocalDateTime eventTime = LocalDateTime.now();
-
-        return createEventLog(customer, eventType, eventTime);
+        return createEventLog(customer, accountNumber, eventType);
     }
 
-    private EventLog createEventLog(Customer customer, EventType eventType, LocalDateTime eventTime) {
+    private EventLog createEventLog(Customer customer, String accountNumber, EventType eventType) {
         if(eventType == EventType.JOIN)
             return getJoinLog(customer);
 
@@ -36,21 +34,21 @@ public class AccountLogGenerator {
             return getCreateAccountLog(customer);
 
         if(eventType == EventType.DEPOSIT)
-            return getDepositLog(customer);
+            return getDepositLog(customer, accountNumber);
 
         if(eventType == EventType.WITHDRAWAL)
-            return getWithdrawalLog(customer);
+            return getWithdrawalLog(customer, accountNumber);
 
         if(eventType == EventType.TRANSFER)
-            return getTransferLog(customer);
+            return getTransferLog(customer, accountNumber);
 
         return null;
     }
 
-    private TransferLog getTransferLog(Customer customer) {
+    private TransferLog getTransferLog(Customer customer, String accountNumber) {
         TransferLog transferLog = new TransferLog();
         transferLog.setCustomerNumber(customer.getNumber());
-        transferLog.setTransferAccountNumber(String.valueOf(getRandomNumber(MAX_BOUND)));
+        transferLog.setTransferAccountNumber(accountNumber);
         transferLog.setReceiveBank(getRandomString(5));
         transferLog.setReceiveAccountNumber(String.valueOf(getRandomNumber(MAX_BOUND)));
         transferLog.setReceiveCustomerName(getRandomString(7));
@@ -59,20 +57,20 @@ public class AccountLogGenerator {
         return transferLog;
     }
 
-    private WithdrawalLog getWithdrawalLog(Customer customer) {
+    private WithdrawalLog getWithdrawalLog(Customer customer, String accountNumber) {
         WithdrawalLog withdrawalLog = new WithdrawalLog();
         withdrawalLog.setCustomerNumber(customer.getNumber());
         withdrawalLog.setAmount(getRandomAmount());
-        withdrawalLog.setWithdrawalAccountNumber(String.valueOf(getRandomNumber(MAX_BOUND)));
+        withdrawalLog.setWithdrawalAccountNumber(accountNumber);
         withdrawalLog.setDatetime(LocalDateTime.now());
         return withdrawalLog;
     }
 
-    private DepositLog getDepositLog(Customer customer) {
+    private DepositLog getDepositLog(Customer customer, String accountNumber) {
         DepositLog depositLog = new DepositLog();
         depositLog.setCustomerNumber(customer.getNumber());
         depositLog.setAmount(getRandomAmount());
-        depositLog.setDepositAccountNumber(String.valueOf(getRandomNumber(MAX_BOUND)));
+        depositLog.setDepositAccountNumber(accountNumber);
         depositLog.setDatetime(LocalDateTime.now());
         return depositLog;
     }

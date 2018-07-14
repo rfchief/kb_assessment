@@ -37,7 +37,7 @@ public class ProfileWorkerTest {
 
     @After
     public void destroy() {
-        new File(filePath).delete();
+//        new File(filePath).delete();
     }
 
     @Test

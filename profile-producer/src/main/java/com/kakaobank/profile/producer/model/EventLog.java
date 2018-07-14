@@ -1,6 +1,5 @@
 package com.kakaobank.profile.producer.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public interface EventLog {

@@ -30,9 +30,10 @@ public class AccountLogGeneratorTest {
         //given
         Customer emptyCustomer = null;
         EventType eventType = EventType.JOIN;
+        String accountNumber = null;
 
         //when
-        EventLog actual = generator.doGenerate(emptyCustomer, eventType);
+        EventLog actual = generator.doGenerate(emptyCustomer, accountNumber, eventType);
 
         //then
         Assert.assertThat(actual, is(notNullValue()));
@@ -43,9 +44,10 @@ public class AccountLogGeneratorTest {
         //given
         Customer givenCustomer = TestDataFactory.getCustomer();
         EventType givenEventType = EventType.JOIN;
+        String accountNumber = "12345";
 
         //when
-        EventLog actual = generator.doGenerate(givenCustomer, givenEventType);
+        EventLog actual = generator.doGenerate(givenCustomer, accountNumber, givenEventType);
 
         //then
         Assert.assertThat(actual, is(notNullValue()));
@@ -57,9 +59,10 @@ public class AccountLogGeneratorTest {
         //given
         Customer givenCustomer = TestDataFactory.getCustomer();
         EventType givenEventType = EventType.CREATE;
+        String accountNumber = "12345";
 
         //when
-        EventLog actual = generator.doGenerate(givenCustomer, givenEventType);
+        EventLog actual = generator.doGenerate(givenCustomer, accountNumber, givenEventType);
 
         //then
         Assert.assertThat(actual, is(notNullValue()));
