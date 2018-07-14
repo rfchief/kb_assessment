@@ -1,4 +1,4 @@
-package com.kakaobank.profile.producer.Factory;
+package com.kakaobank.profile.producer.factory;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.ObjectMapper;

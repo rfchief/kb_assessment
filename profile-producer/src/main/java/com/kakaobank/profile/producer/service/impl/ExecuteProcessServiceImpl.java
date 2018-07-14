@@ -1,6 +1,6 @@
 package com.kakaobank.profile.producer.service.impl;
 
-import com.kakaobank.profile.producer.Factory.BeanFactory;
+import com.kakaobank.profile.producer.factory.BeanFactory;
 import com.kakaobank.profile.producer.generator.CustomerProfileGenerator;
 import com.kakaobank.profile.producer.model.Customer;
 import com.kakaobank.profile.producer.service.ExecuteProcessService;

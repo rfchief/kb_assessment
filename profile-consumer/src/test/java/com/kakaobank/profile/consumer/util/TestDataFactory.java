@@ -5,7 +5,9 @@ import com.kakaobank.profile.consumer.model.AccountAmount;
 import com.kakaobank.profile.consumer.model.EventType;
 import com.kakaobank.profile.consumer.model.log.AccountLog;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class TestDataFactory {
 
@@ -56,6 +58,10 @@ public class TestDataFactory {
         given.setDateTime(LocalDateTime.now());
 
         return given;
+    }
+
+    public static List<String> getJsonAccountLogs(String filePath) throws IOException {
+        return FileReader.readActualContent(filePath);
     }
 
 }

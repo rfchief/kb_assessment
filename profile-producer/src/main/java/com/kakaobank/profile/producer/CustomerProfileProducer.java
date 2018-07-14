@@ -1,6 +1,6 @@
 package com.kakaobank.profile.producer;
 
-import com.kakaobank.profile.producer.Factory.BeanFactory;
+import com.kakaobank.profile.producer.factory.BeanFactory;
 import com.kakaobank.profile.producer.service.ExecuteProcessService;
 import com.kakaobank.profile.producer.util.ProducerUtil;
 import org.slf4j.Logger;
