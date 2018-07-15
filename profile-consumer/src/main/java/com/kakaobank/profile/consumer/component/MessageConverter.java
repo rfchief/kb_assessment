@@ -1,5 +1,6 @@
 package com.kakaobank.profile.consumer.component;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kakaobank.profile.consumer.model.EventType;
@@ -17,6 +18,10 @@ public class MessageConverter {
 
     public MessageConverter(ObjectMapper objectMapper) {
         this.objectMapper = objectMapper;
+    }
+
+    public String writeJson(Object object) throws JsonProcessingException {
+        return objectMapper.writeValueAsString(object);
     }
 
     public <T> T read(String jsonEventLog, Class<T> valueType) throws IOException {
