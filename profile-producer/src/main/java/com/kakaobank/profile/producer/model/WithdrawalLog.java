@@ -6,7 +6,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
-import java.time.format.DateTimeFormatter;
 
 public class WithdrawalLog implements EventLog, Serializable {
     private static final long serialVersionUID = -7384312825431692598L;

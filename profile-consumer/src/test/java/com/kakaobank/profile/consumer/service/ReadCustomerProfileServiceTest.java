@@ -8,16 +8,14 @@ import com.kakaobank.profile.consumer.model.Account;
 import com.kakaobank.profile.consumer.model.AccountAmount;
 import com.kakaobank.profile.consumer.model.Customer;
 import com.kakaobank.profile.consumer.model.dto.CustomerProfileDTO;
-import com.kakaobank.profile.consumer.service.impl.ReadCustomerCustomerProfileServiceImpl;
+import com.kakaobank.profile.consumer.service.impl.ReadCustomerProfileServiceImpl;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.time.LocalDateTime;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.hamcrest.CoreMatchers.nullValue;
+import static org.hamcrest.CoreMatchers.*;
 
 public class ReadCustomerProfileServiceTest {
 
@@ -34,7 +32,7 @@ public class ReadCustomerProfileServiceTest {
         initCustomer();
         initAccount();
 
-        this.service = new ReadCustomerCustomerProfileServiceImpl(customerDao, accountDao);
+        this.service = new ReadCustomerProfileServiceImpl(customerDao, accountDao);
     }
 
     private void initAccount() {
@@ -75,7 +73,7 @@ public class ReadCustomerProfileServiceTest {
         long notExistCustomerNumber = -1;
 
         //when
-        CustomerProfileDTO actual = service.getCustomerProfile(notExistCustomerNumber);
+        CustomerProfileDTO actual = service.getCustomerProfileBy(notExistCustomerNumber);
 
         //then
         Assert.assertThat(actual, is(nullValue()));
@@ -87,7 +85,7 @@ public class ReadCustomerProfileServiceTest {
         long givenCustomerNumber = givenCustomer.getNumber();
 
         //when
-        CustomerProfileDTO actual = service.getCustomerProfile(givenCustomerNumber);
+        CustomerProfileDTO actual = service.getCustomerProfileBy(givenCustomerNumber);
 
         //then
         Assert.assertThat(actual, is(notNullValue()));

@@ -1,6 +1,6 @@
 package com.kakaobank.profile.consumer;
 
-import static spark.Spark.*;
+import static spark.Spark.get;
 
 public class ProfileConsumer {
     public static void main(String[] args) {

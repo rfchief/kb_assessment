@@ -1,5 +1,6 @@
 package com.kakaobank.profile.consumer.model.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.io.Serializable;
@@ -15,6 +16,7 @@ public class CustomerProfileDTO implements Serializable {
     private String customerName;
 
     @JsonProperty("join_dt")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime joinDt;
 
     @JsonProperty("largest_deposit_amount")

@@ -3,8 +3,6 @@ package com.kakaobank.profile.producer.generator;
 import com.kakaobank.profile.producer.model.Customer;
 import com.kakaobank.profile.producer.util.StringUtil;
 
-import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;

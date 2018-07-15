@@ -62,6 +62,13 @@ public class Account {
         return amount.getLargestTransferAmount();
     }
 
+    public long getBalance() {
+        if(amount == null)
+            return 0;
+
+        return amount.getBalance();
+    }
+
     @Override
     public String toString() {
         return customerNumber + "___" + accountNumber + "___" + amount.toString() + "___" + createDt.toString();

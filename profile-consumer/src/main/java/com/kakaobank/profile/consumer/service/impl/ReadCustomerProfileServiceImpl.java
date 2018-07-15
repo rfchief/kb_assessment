@@ -7,17 +7,17 @@ import com.kakaobank.profile.consumer.model.Customer;
 import com.kakaobank.profile.consumer.model.dto.CustomerProfileDTO;
 import com.kakaobank.profile.consumer.service.ReadCustomerProfileService;
 
-public class ReadCustomerCustomerProfileServiceImpl implements ReadCustomerProfileService {
+public class ReadCustomerProfileServiceImpl implements ReadCustomerProfileService {
     private final CustomerDao customerDao;
     private final AccountDao accountDao;
 
-    public ReadCustomerCustomerProfileServiceImpl(CustomerDao customerDao, AccountDao accountDao) {
+    public ReadCustomerProfileServiceImpl(CustomerDao customerDao, AccountDao accountDao) {
         this.customerDao = customerDao;
         this.accountDao = accountDao;
     }
 
     @Override
-    public CustomerProfileDTO getCustomerProfile(long customerNumber) {
+    public CustomerProfileDTO getCustomerProfileBy(long customerNumber) {
         Customer customer = customerDao.findByNumber(customerNumber);
         if(customer == null)
             return null;
