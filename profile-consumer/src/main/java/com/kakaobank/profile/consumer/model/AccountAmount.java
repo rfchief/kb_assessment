@@ -22,6 +22,13 @@ public class AccountAmount {
         this.largestTransferAmount = 0;
     }
 
+    public AccountAmount(long balance, long largestDepositAmount, long largestWithdrawalAmount, long largestTransferAmount) {
+        this.balance = balance;
+        this.largestDepositAmount = largestDepositAmount;
+        this.largestWithdrawalAmount = largestWithdrawalAmount;
+        this.largestTransferAmount = largestTransferAmount;
+    }
+
     public String getAccountNumber() {
         return accountNumber;
     }

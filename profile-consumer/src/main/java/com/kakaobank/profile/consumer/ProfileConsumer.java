@@ -18,15 +18,9 @@ public class ProfileConsumer {
     private final static Logger logger = LoggerFactory.getLogger(ProfileConsumer.class);
 
     public static void main(String[] args) {
+
         registerApiUris();
 
-        exception(Exception.class, (e, req, res) -> {
-            String message = e.getClass().getName() + ": " + e.getMessage();
-            logger.error(message);
-            res.type("application/json");
-            res.status(500);
-            res.body(message);
-        });
     }
 
     private static void registerApiUris() {
@@ -48,6 +42,14 @@ public class ProfileConsumer {
             int pageSize = Integer.parseInt(req.queryParams("pageSize"));
 
             return readAccountProfileController.getAccountProfile(customerNumber, accountNumber, pageIndex, pageSize);
+        });
+
+        exception(Exception.class, (e, req, res) -> {
+            String message = e.getClass().getName() + ": " + e.getMessage();
+            logger.error(message);
+            res.type("application/json");
+            res.status(500);
+            res.body(message);
         });
     }
 
