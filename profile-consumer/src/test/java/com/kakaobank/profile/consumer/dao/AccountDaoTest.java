@@ -56,6 +56,20 @@ public class AccountDaoTest {
     }
 
     @Test
+    public void givenCustomerNumber_whenFindByCustomerNumber_thenReturnFirstAccountTest() {
+        //given
+        Account givenAccount = TestDataFactory.getAccount();
+        dao.insert(givenAccount);
+
+        //when
+        Account actual = dao.findByCustomerNumber(givenAccount.getCustomerNumber());
+
+        //then
+        Assert.assertThat(actual, is(notNullValue()));
+        Assert.assertThat(actual, is(givenAccount));
+    }
+
+    @Test
     public void givenDepositAccountLog_whenInsertAccountLog_thenSaveDepositEventLogTest() {
         //given
         Account account = TestDataFactory.getAccount();

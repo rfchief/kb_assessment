@@ -1,8 +1,6 @@
 package com.kakaobank.profile.consumer.component;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.kakaobank.profile.consumer.model.EventType;
 import com.kakaobank.profile.consumer.model.dto.log.AccountLogDTO;
 import com.kakaobank.profile.consumer.util.TestDataFactory;
 import org.junit.Assert;
@@ -13,8 +11,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.CoreMatchers.*;
 
 public class MessageConverterTest {
 
@@ -45,5 +42,17 @@ public class MessageConverterTest {
         Assert.assertThat(logs.size(), is(jsonStrings.size()));
         for (AccountLogDTO log : logs)
             Assert.assertThat(log, is(notNullValue()));
+    }
+
+    @Test
+    public void givenInvalidJsonString_whenReadValue_thenReturnNullTest() {
+        //given
+        String invalidJson = "{\"customer_number\":1531550166502,\"eventType\":\"JOIN\"}";
+
+        //when
+        AccountLogDTO actual = converter.read(invalidJson);
+
+        //then
+        Assert.assertThat(actual, is(nullValue()));
     }
 }

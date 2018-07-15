@@ -9,6 +9,8 @@ import java.util.List;
 public interface AccountDao {
     Account findByCustomerNumberAndAccountNumber(long customerNumber, String accountNumber);
 
+    Account findByCustomerNumber(long customerNumber);
+
     void insert(Account account);
 
     void insert(AccountAmount amount);

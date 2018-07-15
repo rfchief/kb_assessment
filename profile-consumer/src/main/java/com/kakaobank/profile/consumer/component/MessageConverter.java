@@ -4,13 +4,15 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kakaobank.profile.consumer.model.EventType;
 import com.kakaobank.profile.consumer.model.dto.log.AccountLogDTO;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class MessageConverter {
-
+    private final Logger logger = LoggerFactory.getLogger(MessageConverter.class);
     private final ObjectMapper objectMapper;
 
     public MessageConverter(ObjectMapper objectMapper) {
@@ -21,10 +23,18 @@ public class MessageConverter {
         return objectMapper.readValue(jsonEventLog, valueType);
     }
 
-    public AccountLogDTO read(String json) throws IOException {
-        JsonNode jsonNode = objectMapper.readTree(json);
+    public AccountLogDTO read(String json) {
+        try {
+            JsonNode jsonNode = objectMapper.readTree(json);
 
-        return convertJsonToAccountLogDTO(jsonNode);
+            return convertJsonToAccountLogDTO(jsonNode);
+        } catch (IOException ioe) {
+            logger.error("JSON parsing error!!! [json : " + json + "]");
+        } catch (NullPointerException npe) {
+            logger.error("JSON parsing error!!! [json : " + json + "]");
+        }
+
+        return null;
     }
 
     private AccountLogDTO convertJsonToAccountLogDTO(JsonNode jsonNode) {

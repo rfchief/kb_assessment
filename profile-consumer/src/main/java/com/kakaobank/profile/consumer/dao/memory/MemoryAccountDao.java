@@ -5,19 +5,24 @@ import com.kakaobank.profile.consumer.model.Account;
 import com.kakaobank.profile.consumer.model.AccountAmount;
 import com.kakaobank.profile.consumer.model.log.AccountLog;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 
 public class MemoryAccountDao implements AccountDao {
 
-    private Map<Long, HashMap<String, Account>> accountRepository = new ConcurrentHashMap<>();
-    private Map<String, List<AccountLog>> accountLogRepository = new ConcurrentHashMap<>();
-    private Map<String, AtomicLong> accountLogSeqRepository = new ConcurrentHashMap<>();
-    private Map<String, AccountAmount> accountAmountRepository = new ConcurrentHashMap<>();
+    private final Map<Long, HashMap<String, Account>> accountRepository;
+    private final Map<String, List<AccountLog>> accountLogRepository;
+    private final Map<String, AtomicLong> accountLogSeqRepository;
+    private final Map<String, AccountAmount> accountAmountRepository;
+
+    public MemoryAccountDao() {
+        this.accountRepository = new ConcurrentHashMap<>();
+        this.accountLogRepository = new ConcurrentHashMap<>();
+        this.accountLogSeqRepository = new ConcurrentHashMap<>();
+        this.accountAmountRepository = new ConcurrentHashMap<>();
+
+    }
 
     @Override
     public Account findByCustomerNumberAndAccountNumber(long customerNumber, String accountNumber) {
@@ -26,6 +31,18 @@ public class MemoryAccountDao implements AccountDao {
 
         Account account = accountRepository.get(customerNumber).get(accountNumber);
         AccountAmount accountAmount = accountAmountRepository.get(accountNumber);
+        account.setAmount(accountAmount);
+
+        return account;
+    }
+
+    @Override
+    public Account findByCustomerNumber(long customerNumber) {
+        if(isNotExistAccount(customerNumber))
+            return null;
+
+        Account account = accountRepository.get(customerNumber).values().iterator().next();
+        AccountAmount accountAmount = accountAmountRepository.get(account);
         account.setAmount(accountAmount);
 
         return account;
@@ -55,7 +72,6 @@ public class MemoryAccountDao implements AccountDao {
             logs = accountLogRepository.get(accountLog.getAccountNumber());
         else {
             logs = new ArrayList<>();
-            accountLogSeqRepository = new HashMap<>();
             accountLogSeqRepository.put(accountLog.getAccountNumber(), new AtomicLong(0));
         }
 

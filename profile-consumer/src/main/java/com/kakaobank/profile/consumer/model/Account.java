@@ -41,8 +41,30 @@ public class Account {
         this.createDt = createDt;
     }
 
+    public long getLargestDepositAmount() {
+        if(amount == null)
+            return 0;
+
+        return amount.getLargestDepositAmount();
+    }
+
+    public long getLargestWithdrawalAmount() {
+        if(amount == null)
+            return 0;
+
+        return amount.getLargestWithdrawalAmount();
+    }
+
+    public long getLargestTransferAmount() {
+        if(amount == null)
+            return 0;
+
+        return amount.getLargestTransferAmount();
+    }
+
     @Override
     public String toString() {
         return customerNumber + "___" + accountNumber + "___" + amount.toString() + "___" + createDt.toString();
     }
+
 }
