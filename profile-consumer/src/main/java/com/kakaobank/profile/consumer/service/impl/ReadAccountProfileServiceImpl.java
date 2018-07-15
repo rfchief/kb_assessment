@@ -26,7 +26,13 @@ public class ReadAccountProfileServiceImpl implements ReadAccountProfileService 
 
         int offset = pageIndex - 1;
         List<AccountLog> logs = accountDao.findAllLogsByAccountNumber(accountNumber, offset, pageSize);
+        if(logs == null || logs.size() == 0)
+            return null;
 
+        return getAccountProfileDTO(account, logs);
+    }
+
+    private AccountProfileDTO getAccountProfileDTO(Account account, List<AccountLog> logs) {
         List<AccountRecordDTO> depositRecords = null;
         List<AccountRecordDTO> withdrawalRecords = null;
         List<AccountRecordDTO> transferRecords = null;
@@ -58,10 +64,10 @@ public class ReadAccountProfileServiceImpl implements ReadAccountProfileService 
             }
         }
 
-        return getAccountProfileDTO(account, depositRecords, withdrawalRecords, transferRecords);
+        return createAccountProfileDTO(account, depositRecords, withdrawalRecords, transferRecords);
     }
 
-    private AccountProfileDTO getAccountProfileDTO(Account account, List<AccountRecordDTO> depositRecords, List<AccountRecordDTO> withdrawalRecords, List<AccountRecordDTO> transferRecords) {
+    private AccountProfileDTO createAccountProfileDTO(Account account, List<AccountRecordDTO> depositRecords, List<AccountRecordDTO> withdrawalRecords, List<AccountRecordDTO> transferRecords) {
         AccountProfileDTO profileDTO = new AccountProfileDTO();
         profileDTO.setCustomerNumber(account.getCustomerNumber());
         profileDTO.setAccountNumber(account.getAccountNumber());
@@ -70,7 +76,7 @@ public class ReadAccountProfileServiceImpl implements ReadAccountProfileService 
         profileDTO.setDepositLogs(depositRecords);
         profileDTO.setWithdrawalLogs(withdrawalRecords);
         profileDTO.setTransferLogs(transferRecords);
-
         return profileDTO;
     }
+
 }

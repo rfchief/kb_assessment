@@ -23,7 +23,6 @@ public class ReadCustomerProfileServiceImpl implements ReadCustomerProfileServic
             return null;
 
         Account account = accountDao.findByCustomerNumber(customer.getNumber());
-
         return createCustomerProfileDTO(customer, account);
     }
 

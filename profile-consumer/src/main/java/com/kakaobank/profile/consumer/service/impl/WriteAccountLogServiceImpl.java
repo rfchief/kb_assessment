@@ -1,6 +1,5 @@
 package com.kakaobank.profile.consumer.service.impl;
 
-import com.kakaobank.profile.consumer.ProfileConsumer;
 import com.kakaobank.profile.consumer.component.MessageConverter;
 import com.kakaobank.profile.consumer.dao.AccountDao;
 import com.kakaobank.profile.consumer.dao.CustomerDao;
@@ -29,6 +28,7 @@ public class WriteAccountLogServiceImpl implements WriteAccountLogService {
         this.messageConverter = messageConverter;
     }
 
+    @Override
     public void write(String content) {
         if (content == null || content == "")
             return;
@@ -70,7 +70,7 @@ public class WriteAccountLogServiceImpl implements WriteAccountLogService {
         account.setCustomerNumber(accountLogDTO.getCustomerNumber());
         account.setAccountNumber(accountLogDTO.getAccountNumber());
         account.setCreateDt(accountLogDTO.getDateTime());
-        account.setAmount(new AccountAmount(0,0,0,0));
+        account.setAmount(new AccountAmount(accountLogDTO.getAccountNumber(),0, 0, 0, 0));
 
         accountDao.insert(account);
     }

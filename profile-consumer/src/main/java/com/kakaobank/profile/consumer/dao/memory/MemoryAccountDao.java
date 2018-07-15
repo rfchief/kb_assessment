@@ -33,9 +33,11 @@ public class MemoryAccountDao implements AccountDao {
             return null;
 
         Account account = accountRepository.get(customerNumber).get(accountNumber);
+        if(account == null)
+            return null;
+
         AccountAmount accountAmount = accountAmountRepository.get(accountNumber);
         account.setAmount(accountAmount);
-
         return account;
     }
 
@@ -45,7 +47,7 @@ public class MemoryAccountDao implements AccountDao {
             return null;
 
         Account account = accountRepository.get(customerNumber).values().iterator().next();
-        AccountAmount accountAmount = accountAmountRepository.get(account);
+        AccountAmount accountAmount = accountAmountRepository.get(account.getAccountNumber());
         account.setAmount(accountAmount);
 
         return account;

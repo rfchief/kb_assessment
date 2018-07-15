@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
-    <property name="LOG_PATH" value="logs/profile-producer/"/>
+    <property name="LOG_PATH" value="logs/profile-consumer/"/>
 
     <!-- Application Log -->
     <include resource="logback/application-appender.xml"/>

@@ -22,7 +22,8 @@ public class AccountAmount {
         this.largestTransferAmount = 0;
     }
 
-    public AccountAmount(long balance, long largestDepositAmount, long largestWithdrawalAmount, long largestTransferAmount) {
+    public AccountAmount(String accountNumber, long balance, long largestDepositAmount, long largestWithdrawalAmount, long largestTransferAmount) {
+        this.accountNumber = accountNumber;
         this.balance = balance;
         this.largestDepositAmount = largestDepositAmount;
         this.largestWithdrawalAmount = largestWithdrawalAmount;
@@ -110,7 +111,7 @@ public class AccountAmount {
 
     @Override
     public String toString() {
-        return balance + "___" + largestDepositAmount + "___" + largestWithdrawalAmount + "___" + largestTransferAmount;
+        return accountNumber + "___" + balance + "___" + largestDepositAmount + "___" + largestWithdrawalAmount + "___" + largestTransferAmount;
     }
 
 }
